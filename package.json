@@ -1,0 +1,47 @@
+{
+  "name": "tagtics-client",
+  "version": "1.0.0",
+  "description": "The client side package for the Tagtics Saas platform",
+  "keywords": [
+    "Tagtics",
+    "UI/UX",
+    "feedback",
+    "Saas"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tagtics/tagtics-client.git"
+  },
+  "license": "ISC",
+  "author": "rishi-rj-s",
+  "type": "module",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "unpkg": "dist/index.umd.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "vitest",
+    "dev-server": "ts-node-esm server/receiver.ts",
+    "lint": "eslint . --ext .ts",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "express": "^4.18.0",
+    "jsdom": "^22.0.0",
+    "rollup": "^3.0.0",
+    "ts-node": "^10.0.0",
+    "tslib": "^2.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^0.34.0"
+  }
+}
