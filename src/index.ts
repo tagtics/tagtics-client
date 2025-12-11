@@ -1,11 +1,7 @@
 type TagticsConfig = {
     apiKey: string;
-    include?: string[];
-    exclude?: string[];
-    iconPosition?: { top?: string; right?: string; bottom?: string; left?: string };
     serializeChildDepth?: number;
     privacyNotice?: string;
-    allowSameOriginIframe?: boolean;
     allowSensitivePages?: boolean;
     logoUrl?: string;
     includePaths?: string[]; // Regex strings to include
@@ -689,31 +685,22 @@ function closeModal() {
 }
 
 
-export function init(c: TagticsConfig): void {
-    if (!c.apiKey) {
-        console.error('Tagtics: apiKey is required');
-        return;
-    }
+// Helper function to check if current path should show widget
+function shouldShowOnCurrentPath(): boolean {
+    if (!config) return false;
 
-    config = c;
     const path = window.location.pathname;
 
-    // --- Path Visibility Logic ---
-
     // 1. Exclude Checks
-    // New Regex Exclude
     if (config.excludePaths) {
         for (const pattern of config.excludePaths) {
             try {
-                if (new RegExp(pattern).test(path)) return;
+                if (new RegExp(pattern).test(path)) return false;
             } catch (e) { console.warn('[Tagtics] Invalid excludePaths regex:', pattern); }
         }
     }
-    // Legacy Prefix Exclude
-    if (config.exclude && config.exclude.some(p => path.startsWith(p))) return;
 
     // 2. Include Checks
-    // New Regex Include
     if (config.includePaths && config.includePaths.length > 0) {
         let matched = false;
         for (const pattern of config.includePaths) {
@@ -724,19 +711,69 @@ export function init(c: TagticsConfig): void {
                 }
             } catch (e) { console.warn('[Tagtics] Invalid includePaths regex:', pattern); }
         }
-        if (!matched) return;
+        if (!matched) return false;
     }
-    // Legacy Prefix Include
-    if (config.include && !config.include.some(p => path.startsWith(p))) return;
 
+    // 3. Payment page check
     const isPayment = isLikelyPaymentPage();
-    if (isPayment) {
-        if (!config.allowSensitivePages) return;
+    if (isPayment && !config.allowSensitivePages) return false;
 
+    return true;
+}
+
+// Helper function to show/hide widget based on current path
+function updateWidgetVisibility() {
+    const shouldShow = shouldShowOnCurrentPath();
+
+    if (shouldShow && !hostElement) {
+        // Show widget
+        open();
+    } else if (!shouldShow && hostElement) {
+        // Hide widget
+        if (hostElement) {
+            hostElement.style.display = 'none';
+        }
+    } else if (shouldShow && hostElement) {
+        // Already showing, make sure it's visible
+        hostElement.style.display = 'block';
+    }
+}
+
+export function init(c: TagticsConfig): void {
+    if (!c.apiKey) {
+        console.error('Tagtics: apiKey is required');
+        return;
     }
 
-    open();
+    config = c;
+
+    // Initial check
+    updateWidgetVisibility();
+
+    // Listen for route changes (SPA support)
+    // Method 1: popstate (back/forward buttons)
+    window.addEventListener('popstate', updateWidgetVisibility);
+
+    // Method 2: Intercept pushState and replaceState (programmatic navigation)
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    history.pushState = function (...args) {
+        originalPushState.apply(this, args);
+        updateWidgetVisibility();
+    };
+
+    history.replaceState = function (...args) {
+        originalReplaceState.apply(this, args);
+        updateWidgetVisibility();
+    };
+
+    // Store references for cleanup
+    (window as any)._tagticsRouteListener = updateWidgetVisibility;
+    (window as any)._tagticsOriginalPushState = originalPushState;
+    (window as any)._tagticsOriginalReplaceState = originalReplaceState;
 }
+
 
 export function open(): void {
     const isPayment = isLikelyPaymentPage();
@@ -935,7 +972,7 @@ export function open(): void {
     shadowRoot.appendChild(modal);
 }
 
-export function destroy(): void {
+function destroy(): void {
     if (hostElement) {
         hostElement.remove();
         hostElement = null;
@@ -949,6 +986,20 @@ export function destroy(): void {
         if ((window as any)._tagticsEscHandler) {
             document.removeEventListener('keydown', (window as any)._tagticsEscHandler);
             delete (window as any)._tagticsEscHandler;
+        }
+        // Clean up route listeners
+        if ((window as any)._tagticsRouteListener) {
+            window.removeEventListener('popstate', (window as any)._tagticsRouteListener);
+            delete (window as any)._tagticsRouteListener;
+        }
+        // Restore original history methods
+        if ((window as any)._tagticsOriginalPushState) {
+            history.pushState = (window as any)._tagticsOriginalPushState;
+            delete (window as any)._tagticsOriginalPushState;
+        }
+        if ((window as any)._tagticsOriginalReplaceState) {
+            history.replaceState = (window as any)._tagticsOriginalReplaceState;
+            delete (window as any)._tagticsOriginalReplaceState;
         }
     }
 }
