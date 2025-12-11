@@ -7,15 +7,16 @@
 The client-side package for the Tagtics SaaS platform - A premium feedback collection tool with modern Glassmorphism UI.
 
 ## Features
-
-✨ **Premium Glassmorphism UI** - Modern dark theme with blur effects  
-🎨 **Professional SVG Icons** - Clean, vector-based interface  
-⌨️ **Smart Interactions** - Enter to submit, Escape to cancel  
-🔍 **Element Picker** - Visual element selection with hover highlights  
-📍 **Path Control** - Regex-based visibility configuration  
-🔄 **Re-pick Support** - Easy element reselection  
+ 
+ **Premium Glassmorphism UI** - Modern dark theme with blur effects  
+ **Professional SVG Icons** - Clean, vector-based interface  
+ **Smart Interactions** - Enter to submit, Escape to cancel  
+ **Element Picker** - Visual element selection with hover highlights  
+ **Path Control** - Regex-based visibility configuration  
+ **Re-pick Support** - Easy element reselection  
 
 ## Installation
+
 
 ```bash
 npm install tagtics-client
@@ -166,16 +167,16 @@ Tagtics.init({
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `apiKey` | `string` | **Required** | Your project API key from tagtics.online |
-| `includePaths` | `string[]` | `undefined` | Regex patterns - show widget ONLY on matching paths ⚠️ |
-| `excludePaths` | `string[]` | `undefined` | Regex patterns - HIDE widget on matching paths ⚠️ |
+| `includePaths` | `string[]` | `undefined` | Regex patterns - show widget ONLY on matching paths |
+| `excludePaths` | `string[]` | `undefined` | Regex patterns - HIDE widget on matching paths |
 | `logoUrl` | `string` | `undefined` | Custom logo URL to replace default icon |
 | `serializeChildDepth` | `number` | `0` | How deep to capture child elements (0 = selected only) |
 | `privacyNotice` | `string` | Default text | Custom privacy notice shown in modal |
 | `allowSensitivePages` | `boolean` | `false` | Allow widget on detected payment/checkout pages |
 
-⚠️ **Important**: `includePaths` and `excludePaths` are **mutually exclusive** - use only one, not both.
+ **Important**: `includePaths` and `excludePaths` are **mutually exclusive** - use only one, not both.
 
-✨ **SPA Support**: Tagtics automatically detects route changes in Single Page Applications (React, Vue, Angular, etc.) and shows/hides the widget based on your path configuration.
+ **SPA Support**: Tagtics automatically detects route changes in Single Page Applications (React, Vue, Angular, etc.) and shows/hides the widget based on your path configuration.
 
 ### Path Control
 
@@ -291,10 +292,10 @@ npm run dev-server
 
 ## Community
 
-- 🐛 [Report bugs](https://github.com/tagtics/tagtics-client/issues)
-- 💡 [Request features](https://github.com/tagtics/tagtics-client/issues)
-- ⭐ [Star the repo](https://github.com/tagtics/tagtics-client) if you find it useful!
-- 🤝 [Contribute](https://github.com/tagtics/tagtics-client/pulls)
+- [Report bugs](https://github.com/tagtics/tagtics-client/issues)
+- [Request features](https://github.com/tagtics/tagtics-client/issues)
+- [Star the repo](https://github.com/tagtics/tagtics-client) if you find it useful!
+- [Contribute](https://github.com/tagtics/tagtics-client/pulls)
 
 ## License
 
