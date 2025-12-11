@@ -4,5 +4,6 @@ export default {
     iconPosition: { bottom: '24px', right: '24px' },
     privacyNotice: 'We never collect typed form values or passwords.',
     allowSameOriginIframe: false,
-    allowSensitivePages: false
+    allowSensitivePages: true,
+    includePaths: ['.*'] // Match everything for test
 }

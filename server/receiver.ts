@@ -6,6 +6,8 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use('/examples', express.static('examples'));
+app.use('/dist', express.static('dist'));
 
 app.post('/tagtics/feedback', (req, res) => {
     const apiKey = req.headers['x-api-key'];
