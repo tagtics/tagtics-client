@@ -175,6 +175,8 @@ Tagtics.init({
 
 ⚠️ **Important**: `includePaths` and `excludePaths` are **mutually exclusive** - use only one, not both.
 
+✨ **SPA Support**: Tagtics automatically detects route changes in Single Page Applications (React, Vue, Angular, etc.) and shows/hides the widget based on your path configuration.
+
 ### Path Control
 
 **Option 1: Whitelist (includePaths)**
