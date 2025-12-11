@@ -208,6 +208,13 @@ function createStyles() {
             z-index: 2147483647; 
             pointer-events: none;
         }
+        
+        /* Hide on devices without hover (touch devices) or small screens */
+        @media (hover: none), (max-width: 768px) {
+            .tagtics-fab-container {
+                display: none !important;
+            }
+        }
         .tagtics-fab-main {
             pointer-events: auto;
             width: 56px; height: 56px; border-radius: 28px;
@@ -547,13 +554,20 @@ function startPicking() {
         selectElement(target);
     };
 
+    const resizeHandler = () => {
+        if (isPicking) {
+            stopPicking(false); // Exit picking mode without opening modal
+        }
+    };
+
     // Delay attaching listeners to avoid catching the triggering click
     setTimeout(() => {
         document.addEventListener('mouseover', mouseOverHandler);
         document.addEventListener('click', clickHandler, { capture: true });
+        window.addEventListener('resize', resizeHandler); // Exit on resize
 
         // Store handlers
-        (window as any)._tagticsHandlers = { mouseOverHandler, clickHandler, highlightBox, tooltip };
+        (window as any)._tagticsHandlers = { mouseOverHandler, clickHandler, resizeHandler, highlightBox, tooltip };
     }, 50);
 }
 
@@ -562,9 +576,10 @@ function stopPicking(proceedToModal: boolean = true) {
     unblockEvents();
     document.body.style.cursor = 'default';
     if ((window as any)._tagticsHandlers) {
-        const { mouseOverHandler, clickHandler, highlightBox, tooltip } = (window as any)._tagticsHandlers;
+        const { mouseOverHandler, clickHandler, resizeHandler, highlightBox, tooltip } = (window as any)._tagticsHandlers;
         document.removeEventListener('mouseover', mouseOverHandler);
         document.removeEventListener('click', clickHandler, { capture: true });
+        if (resizeHandler) window.removeEventListener('resize', resizeHandler);
         highlightBox.remove();
         tooltip.remove();
         delete (window as any)._tagticsHandlers;
