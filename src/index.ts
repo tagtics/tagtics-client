@@ -1,4 +1,4 @@
-export type TagticsConfig = {
+type TagticsConfig = {
     apiKey: string;
     include?: string[];
     exclude?: string[];

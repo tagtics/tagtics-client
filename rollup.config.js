@@ -9,6 +9,7 @@ export default {
             file: 'dist/index.cjs.js',
             format: 'cjs',
             sourcemap: true,
+            exports: 'auto',
         },
         {
             file: 'dist/index.esm.js',
@@ -20,6 +21,7 @@ export default {
             format: 'umd',
             name: 'Tagtics',
             sourcemap: true,
+            exports: 'auto',
         },
     ],
     plugins: [
