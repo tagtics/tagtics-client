@@ -13,7 +13,7 @@ describe('isLikelyPaymentPage', () => {
     });
 
     afterEach(() => {
-        window.location = originalLocation;
+        (window as any).location = originalLocation;
     });
 
     it('should detect payment keywords in URL', () => {
