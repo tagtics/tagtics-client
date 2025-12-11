@@ -22,6 +22,22 @@ The client-side package for the Tagtics SaaS platform - A premium feedback colle
 npm install tagtics-client
 ```
 
+## Configuration
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `apiKey` | `string` | **Required** | Your project API key from tagtics.online |
+| `includePaths` | `string[]` | `undefined` | Regex patterns - show widget ONLY on matching paths |
+| `excludePaths` | `string[]` | `undefined` | Regex patterns - HIDE widget on matching paths |
+| `logoUrl` | `string` | `undefined` | Custom logo URL to replace default icon |
+| `serializeChildDepth` | `number` | `0` | How deep to capture child elements (0 = selected only) |
+| `privacyNotice` | `string` | Default text | Custom privacy notice shown in modal |
+| `allowSensitivePages` | `boolean` | `false` | Allow widget on detected payment/checkout pages |
+
+ **Important**: `includePaths` and `excludePaths` are **mutually exclusive** - use only one, not both.
+
+ **SPA Support**: Tagtics automatically detects route changes in Single Page Applications (React, Vue, Angular, etc.) and shows/hides the widget based on your path configuration.
+
 ## Quick Start
 
 ### React / Next.js
@@ -161,22 +177,6 @@ Tagtics.init({
   apiKey: 'YOUR_API_KEY',
 });
 ```
-
-## Configuration
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `apiKey` | `string` | **Required** | Your project API key from tagtics.online |
-| `includePaths` | `string[]` | `undefined` | Regex patterns - show widget ONLY on matching paths |
-| `excludePaths` | `string[]` | `undefined` | Regex patterns - HIDE widget on matching paths |
-| `logoUrl` | `string` | `undefined` | Custom logo URL to replace default icon |
-| `serializeChildDepth` | `number` | `0` | How deep to capture child elements (0 = selected only) |
-| `privacyNotice` | `string` | Default text | Custom privacy notice shown in modal |
-| `allowSensitivePages` | `boolean` | `false` | Allow widget on detected payment/checkout pages |
-
- **Important**: `includePaths` and `excludePaths` are **mutually exclusive** - use only one, not both.
-
- **SPA Support**: Tagtics automatically detects route changes in Single Page Applications (React, Vue, Angular, etc.) and shows/hides the widget based on your path configuration.
 
 ### Path Control
 
