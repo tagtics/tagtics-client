@@ -584,7 +584,38 @@ function selectElement(el: HTMLElement) {
     // We'll just highlight the selected element for now to keep it simple and robust.
     // To do the sequence, we'd need to find ancestors and flash the highlight box.
 
-    const descriptor = `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${el.className ? '.' + el.className.split(' ').join('.') : ''} `;
+    // Generate Breadcrumb Path (up to 3 levels up or until ID)
+    let currentEl: HTMLElement | null = el;
+    const pathParts: string[] = [];
+
+    // We'll traverse up to 3 levels max to keep it readable, or until we hit an ID
+    for (let i = 0; i < 4 && currentEl; i++) {
+        let name = currentEl.tagName.toLowerCase();
+
+        if (currentEl.id) {
+            name += `#${currentEl.id}`;
+            pathParts.unshift(name);
+            break; // Stop if we find an ID, that's usually specific enough
+        } else {
+            let className = '';
+            if (typeof currentEl.className === 'string') {
+                className = currentEl.className;
+            } else if (currentEl.className && typeof (currentEl.className as any).baseVal === 'string') {
+                className = (currentEl.className as any).baseVal;
+            }
+            if (className) {
+                // Only take the first class to save space
+                const firstClass = className.split(' ').filter(Boolean)[0];
+                if (firstClass) name += `.${firstClass}`;
+            }
+            pathParts.unshift(name);
+        }
+
+        currentEl = currentEl.parentElement;
+        if (currentEl === document.body || currentEl === document.documentElement) break;
+    }
+
+    const descriptor = pathParts.join(' > ');
 
     const descEl = shadowRoot!.querySelector('.element-desc');
     if (descEl) descEl.textContent = descriptor;
@@ -724,17 +755,23 @@ function shouldShowOnCurrentPath(): boolean {
 // Helper function to show/hide widget based on current path
 function updateWidgetVisibility() {
     const shouldShow = shouldShowOnCurrentPath();
+    const currentPath = window.location.pathname;
+
+    console.log('[Tagtics] Route change detected:', currentPath, 'shouldShow:', shouldShow, 'hostElement exists:', !!hostElement);
 
     if (shouldShow && !hostElement) {
         // Show widget
+        console.log('[Tagtics] Opening widget');
         open();
     } else if (!shouldShow && hostElement) {
         // Hide widget
+        console.log('[Tagtics] Hiding widget');
         if (hostElement) {
             hostElement.style.display = 'none';
         }
     } else if (shouldShow && hostElement) {
         // Already showing, make sure it's visible
+        console.log('[Tagtics] Widget already open, ensuring visibility');
         hostElement.style.display = 'block';
     }
 }
