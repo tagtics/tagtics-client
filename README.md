@@ -165,28 +165,42 @@ Tagtics.init({
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `apiKey` | `string` | **Required** | Your project API key |
-| `endpoint` | `string` | Default API | Custom backend endpoint |
-| `includePaths` | `string[]` | `undefined` | Regex patterns for allowed paths |
-| `excludePaths` | `string[]` | `undefined` | Regex patterns for excluded paths |
-| `logoUrl` | `string` | `undefined` | Custom logo URL for FAB button |
-| `serializeChildDepth` | `number` | `0` | Depth of children to serialize |
-| `privacyNotice` | `string` | Default text | Custom privacy notice |
-| `allowSensitivePages` | `boolean` | `false` | Allow on payment/sensitive pages |
+| `apiKey` | `string` | **Required** | Your project API key from tagtics.online |
+| `includePaths` | `string[]` | `undefined` | Regex patterns - show widget ONLY on matching paths ⚠️ |
+| `excludePaths` | `string[]` | `undefined` | Regex patterns - HIDE widget on matching paths ⚠️ |
+| `logoUrl` | `string` | `undefined` | Custom logo URL to replace default icon |
+| `serializeChildDepth` | `number` | `0` | How deep to capture child elements (0 = selected only) |
+| `privacyNotice` | `string` | Default text | Custom privacy notice shown in modal |
+| `allowSensitivePages` | `boolean` | `false` | Allow widget on detected payment/checkout pages |
 
-### Path Control Examples
+⚠️ **Important**: `includePaths` and `excludePaths` are **mutually exclusive** - use only one, not both.
 
+### Path Control
+
+**Option 1: Whitelist (includePaths)**
 ```javascript
 Tagtics.init({
   apiKey: 'YOUR_API_KEY',
-  
-  // Show only on specific pages
-  includePaths: ['/dashboard.*', '/app.*'],
-  
-  // Hide on admin and auth pages
-  excludePaths: ['/admin.*', '/login', '/signup'],
+  includePaths: ['.*'],  // Show everywhere
+  // OR
+  includePaths: ['/dashboard.*', '/app.*'],  // Show only on these paths
 });
 ```
+
+**Option 2: Blacklist (excludePaths)**
+```javascript
+Tagtics.init({
+  apiKey: 'YOUR_API_KEY',
+  excludePaths: ['/admin.*', '/login', '/signup'],  // Hide on these paths
+});
+```
+
+**Regex Examples:**
+- `'.*'` - Match everything
+- `'/dashboard.*'` - Match /dashboard, /dashboard/settings, etc.
+- `'/login'` - Match exactly /login
+- `'.*checkout.*'` - Match any path containing "checkout"
+
 
 ## Advanced Usage
 

@@ -7,14 +7,15 @@ export type TagticsConfig = {
     privacyNotice?: string;
     allowSameOriginIframe?: boolean;
     allowSensitivePages?: boolean;
-    endpoint?: string;
     logoUrl?: string;
     includePaths?: string[]; // Regex strings to include
     excludePaths?: string[]; // Regex strings to exclude
 };
 
 
-const DEFAULT_ENDPOINT = 'http://localhost:3000/tagtics/feedback';
+// For contributors: Uncomment this line to test with local dev server (npm run dev-server)
+// const LOCAL_DEV_ENDPOINT = 'http://localhost:3000/tagtics/feedback';
+const LOCAL_DEV_ENDPOINT: string | undefined = undefined;
 
 
 let config: TagticsConfig | null = null;
@@ -28,7 +29,7 @@ let selectedElement: HTMLElement | null = null;
 
 // --- Payment Detection Heuristics ---
 const PAYMENT_KEYWORDS = ['checkout', 'payment', 'pay', 'billing', 'order', 'purchase', 'invoice', 'subscribe'];
-const PAYMENT_PROVIDERS = ['stripe.com', 'paypal.com', 'braintreepayments.com', 'square.com', 'adyen.com'];
+const PAYMENT_PROVIDERS = ['stripe.com', 'paypal.com', 'braintreepayments.com', 'square.com', 'adyen.com', 'razorpay.com'];
 const SENSITIVE_INPUT_PATTERNS = /card|cc-|cvv|cvc|expiry|billing|cardholder/i;
 
 export function isLikelyPaymentPage(): boolean {
@@ -641,6 +642,7 @@ async function sendFeedback(text: string) {
     const { hasEmbeds, embedHostnames } = getEmbeds();
 
     const payload = {
+        feedback: text,
         pageUrl: window.location.href,
         path: window.location.pathname,
         timestamp: Date.now(),
@@ -657,12 +659,12 @@ async function sendFeedback(text: string) {
     closeModal();
 
     try {
-        const endpoint = config.endpoint || DEFAULT_ENDPOINT;
+        // Use local dev endpoint if defined (for contributors), otherwise use production
+        const endpoint = LOCAL_DEV_ENDPOINT || `https://www.tagtics.online/new-feedback/${config.apiKey}`;
         await fetch(endpoint, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': config.apiKey
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(payload)
         });
