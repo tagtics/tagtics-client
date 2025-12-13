@@ -5,5 +5,7 @@ export default {
     privacyNotice: 'We never collect typed form values or passwords.',
     allowSameOriginIframe: false,
     allowSensitivePages: true,
-    includePaths: ['.*'] // Match everything for test
+    includePaths: ['.*'], // Match everything for test,
+    // testingMode: true,
+    // port: 3000 (default 3000)
 }

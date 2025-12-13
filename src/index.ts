@@ -6,6 +6,8 @@ type TagticsConfig = {
     logoUrl?: string;
     includePaths?: string[]; // Regex strings to include
     excludePaths?: string[]; // Regex strings to exclude
+    testingMode?: boolean;
+    port?: number | string;
 };
 
 
@@ -702,7 +704,20 @@ async function sendFeedback(text: string) {
 
     try {
         // Use local dev endpoint if defined (for contributors), otherwise use production
-        const endpoint = LOCAL_DEV_ENDPOINT || `https://www.tagtics.online/new-feedback/${config.apiKey}`;
+        let endpoint = LOCAL_DEV_ENDPOINT || `https://www.tagtics.online/new-feedback/${config.apiKey}`;
+
+        if (config.testingMode) {
+            // Check if running continuously on localhost (safety check)
+            const hostname = window.location.hostname;
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                const port = config.port || 3000;
+                endpoint = `http://localhost:${port}/tagtics/feedback`;
+                console.log(`[Tagtics] Testing mode enabled. Sending feedback to ${endpoint}`);
+            } else {
+                console.warn('[Tagtics] Testing mode passed but not running on localhost. modify your config to enable testingMode only on localhost.');
+            }
+        }
+
         await fetch(endpoint, {
             method: 'POST',
             headers: {
