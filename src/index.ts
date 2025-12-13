@@ -10,17 +10,10 @@ type TagticsConfig = {
     port?: number | string;
 };
 
-
-// For contributors: Uncomment this line to test with local dev server (npm run dev-server)
-// const LOCAL_DEV_ENDPOINT = 'http://localhost:3000/tagtics/feedback';
-const LOCAL_DEV_ENDPOINT: string | undefined = undefined;
-
-
 let config: TagticsConfig | null = null;
 let hostElement: HTMLElement | null = null;
 let shadowRoot: ShadowRoot | null = null;
 let isPicking = false;
-let hoveredElement: HTMLElement | null = null;
 let overlay: HTMLElement | null = null;
 let modal: HTMLElement | null = null;
 let selectedElement: HTMLElement | null = null;
@@ -526,7 +519,7 @@ function startPicking() {
 
         if (target === hostElement || target.id === 'tagtics-host') return;
 
-        hoveredElement = target;
+
         const rect = target.getBoundingClientRect();
         highlightBox.style.display = 'block';
         highlightBox.style.position = 'fixed';
@@ -703,8 +696,8 @@ async function sendFeedback(text: string) {
     closeModal();
 
     try {
-        // Use local dev endpoint if defined (for contributors), otherwise use production
-        let endpoint = LOCAL_DEV_ENDPOINT || `https://www.tagtics.online/new-feedback/${config.apiKey}`;
+        // Default to production endpoint
+        let endpoint = `https://www.tagtics.online/new-feedback/${config.apiKey}`;
 
         if (config.testingMode) {
             // Check if running continuously on localhost (safety check)
