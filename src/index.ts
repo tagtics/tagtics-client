@@ -387,6 +387,23 @@ function createStyles() {
         .tagtics-toast.success::before { content: '✓'; color: #22c55e; font-weight: bold; }
         .tagtics-toast.error { border-color: rgba(239, 68, 68, 0.3); color: #fee2e2; }
         .tagtics-toast.error::before { content: '!'; color: #ef4444; font-weight: bold; }
+
+        /* --- Testing Badge --- */
+        .tagtics-testing-badge {
+            background: #f59e0b;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+            pointer-events: none;
+            z-index: 3;
+            margin-bottom: -8px; /* Pull it closer to the button */
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
     `;
     return style;
 }
@@ -947,6 +964,14 @@ export function open(): void {
         fabContainer.classList.toggle('open');
         if (modal!.style.display === 'flex') closeModal();
     };
+
+    if (config.testingMode) {
+        const badge = document.createElement('div');
+        badge.className = 'tagtics-testing-badge';
+        badge.innerText = 'TEST MODE';
+        fabContainer.appendChild(badge);
+    }
+
     fabContainer.appendChild(mainBtn);
 
     // Escape Key Listener
