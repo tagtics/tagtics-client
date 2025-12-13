@@ -6,6 +6,6 @@ export default {
     allowSameOriginIframe: false,
     allowSensitivePages: true,
     includePaths: ['.*'], // Match everything for test,
-    // testingMode: true,
+    testingMode: true,
     // port: 3000 (default 3000)
 }
